@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Sidebar transition</title>
+	<link rel="stylesheet" type="text/css" href="lib/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="bai53.css">
+</head>
+<body class="" id="_body">
+	<div class="wrapper" id="wrapper">
+		<div class="sidebar sidebar_disappear" id="sidebar">
+			<h3 class="menu_name">Demo Sidebar transition</h3>
+			<ul class="list-group">
+				<li class="list-group-item li_item" style="border-radius: 0;">My profile</li>
+				<li class="list-group-item li_item" style="border-radius: 0;">Setting</li>
+				<li class="list-group-item li_item" style="border-radius: 0;">Logout</li>
+			</ul>
+			
+		</div>
+		<div class="center_section">
+			<div class="btn btn-success btn_push" onclick="btnPushEvent()">Push</div>
+
+		</div>
+		
+		<div class="black_bg black_bg_hidden" id="bg_black"></div>
+	</div>
+
+	<script type="text/javascript" src="bai53.js"></script>
+</body>
+</html>

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>My first Vue page</title>
+    <style>
+      #app {
+        border: dashed black 1px;
+        /* width: 130px; */
+        padding-left: 20px;
+        font-weight: bold;
+        background-color: lightgreen;
+      }
+
+      .item-header {
+        color: #7f27ff;
+      }
+
+      .v-for-demo {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+      }
+
+      .v-for-demo figure {
+        width: 80px;
+        padding: 10px;
+        margin: 10px;
+        background-color: lightskyblue;
+        border-radius: 5px;
+      }
+
+      .v-for-demo figcaption {
+        text-align: center;
+      }
+
+      .v-for-demo img {
+        width: 100%;
+        cursor: pointer;
+      }
+
+      .warning {
+        color: #f2613f;
+        font-size: 0.8em;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h1>VueJS basics</h1>
+    <h2>Note: open this single file in browser only</h2>
+    <p>
+      Ref:
+      <a href="https://www.w3schools.com/vue/"
+        >https://www.w3schools.com/vue/</a
+      >
+    </p>
+
+    <div id="app">
+      <h2 class="item-header" v-if="typewriterCount == null">
+        Fake loading...
+      </h2>
+
+      <h2 class="item-header">v-bind demo</h2>
+      <p v-bind:class="{ warning: typewriterCount < 0 }">
+        Typewriter count: {{ typewriterCount }}
+      </p>
+
+      <h2 class="item-header">v-if demo</h2>
+      <p v-if="typewriterCount>3">In stock</p>
+      <p v-else-if="typewriterCount>0">Very few left!</p>
+      <p v-else-if="typewriterCount<0">Invalid data!</p>
+      <p v-else>Not in stock</p>
+
+      <div v-show="showDiv">Div tag with v-show</div>
+      <div v-if="showDiv">Div tag with v-if</div>
+
+      <h2 class="item-header">v-for demo</h2>
+      <div class="v-for-demo">
+        <figure v-for="(food, index) in manyFoods">
+          <img
+            v-bind:src="food.url"
+            v-bind:alt="food.name"
+            v-on:click="onFoodClick"
+          />
+          <figcaption>{{index}}. {{ food.name }}</figcaption>
+        </figure>
+      </div>
+      <div v-if="clickedFood">You've just clicked to {{ clickedFood }}</div>
+
+      <h2 class="item-header">Raw HTML demo</h2>
+      <p>Using text interpolation: {{ rawHtml }}</p>
+      <p>Using v-html directive: <span v-html="rawHtml"></span></p>
+      <p class="warning">
+        Note: Dynamically rendering arbitrary HTML on your website can be very
+        dangerous because it can easily lead to XSS vulnerabilities. Only use
+        v-html on trusted content and never on user-provided content
+      </p>
+
+      <h2 class="item-header">Arguments and Dynamic Arguments demo</h2>
+      <img
+        v-bind:src="directiveUrl"
+        alt="Directive syntax in Vue"
+        height="200"
+      />
+      <div v-bind:[attributeName]="directiveUrl">
+        Please inspect this to see a dynamicArgument. Why this doesn't work?
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script>
+      const BASE_URL = "https://www.w3schools.com/vue/";
+
+      function sleep(ms) {
+        const timer = Date.now() + ms;
+        while (Date.now() < timer) {
+          // do nothing
+        }
+      }
+
+      const app = Vue.createApp({
+        data() {
+          // Before this sleeping, all HTML elements above are rendered, Vue is NOT used yet
+          sleep(1000);
+
+          return {
+            typewriterCount: -30,
+            showDiv: false,
+            manyFoods: [
+              { name: "Burrito", url: BASE_URL + "img_burrito.svg" },
+              { name: "Salad", url: BASE_URL + "img_salad.svg" },
+              { name: "Cake", url: BASE_URL + "img_cake.svg" },
+              { name: "Soup", url: BASE_URL + "img_soup.svg" },
+              { name: "Fish", url: BASE_URL + "img_fish.svg" },
+              { name: "Pizza", url: BASE_URL + "img_pizza.svg" },
+              { name: "Rice", url: BASE_URL + "img_rice.svg" },
+            ],
+            clickedFood: "",
+            rawHtml: '<span style="color: red">This should be red.</span>',
+            directiveUrl: "https://vuejs.org/assets/directive.DtZKvoAo.png",
+          };
+        },
+        methods: {
+          onFoodClick(e) {
+            // console.log("target", e.target); // this is the img tag above
+            console.log("You clicked to " + e.target.alt);
+
+            // We need to write this. as prefix to refer to a data property from inside a method
+            this.clickedFood = e.target.alt;
+          },
+        },
+      });
+      app.mount("#app");
+    </script>
+  </body>
+</html>

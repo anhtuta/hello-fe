@@ -1,0 +1,52 @@
+#d2, #d3, #d4 {
+	width: 80px;
+	height: 50px;
+	padding: 5px;
+	background: cyan;
+	margin: 10px;
+}
+#d3 {
+	background: green;
+	color: #fff;
+}
+#d4 {
+	background: #1a5fce;
+	color: #fff;
+}
+
+.tran04s {transition: 0.4s;}
+
+.move-right {
+	transform:translateX(200px);
+}
+
+.move-right-using-keyframe {
+	animation: moveRight 1s forwards;
+}
+@-webkit-keyframes moveRight {
+	0% {transform: translateX(0);}
+	50% {transform: translateX(300px);}
+	100% {transform: translateX(300px); margin-top: 70px; opacity: 0;}
+}
+
+/*============ animation for #d4 ===========*/
+.d4_first_direct {
+	animation: first_direct 2s forwards;
+}
+.d4_second_direct {
+	animation: second_direct 2s forwards;
+}
+@-webkit-keyframes first_direct {
+	0% {transform:translateX(0px) translateY(0px);}
+	25% {transform:translateX(200px) translateY(0px);}
+	50% {transform:translateX(200px) translateY(200px);}
+	75% {transform:translateX(400px) translateY(200px);}
+	100% {transform:translateX(400px) translateY(0px);}
+}
+@-webkit-keyframes second_direct {	/* ngược lại so với cái first_direct*/
+	100% {transform:translateX(0px) translateY(0px);}
+	75% {transform:translateX(200px) translateY(0px);}
+	50% {transform:translateX(200px) translateY(200px);}
+	25% {transform:translateX(400px) translateY(200px);}
+	0% {transform:translateX(400px) translateY(0px);}
+}

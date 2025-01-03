@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Demo_title</title>
+	<link rel="stylesheet" type="text/css" href="lib/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="lib/font-awesome-4.7.0/css/font-awesome.css">
+	<link rel="stylesheet" type="text/css" href="bai38.css">
+</head>
+<body>
+	<div class="container">
+		<h3>Demo facebook menubar</h3>
+
+		<div class="fb_panel">
+			<div class="fb_menu" style="margin-right: 50px;"></div>
+
+			<div class="fb_menu">
+				<i onclick="menuIconEvent(this, 0)" id="fb_menu_icon_0" class="fa fa-caret-down fa-2x tam_giac" aria-hidden="true"></i>
+				
+				<div class="fb_menu_items being_hidden" id="fb_items_0">
+					<ul class="list-group">
+						<li class="list-group-item li_item">My profile</li>
+						<li class="list-group-item li_item">Setting</li>
+						<li class="list-group-item li_item">Logout</li>
+					</ul>
+				</div>
+			</div>
+
+			<div class="fb_notifications">
+				<i onclick="menuIconEvent(this, 1)" id="fb_menu_icon_1" class="fa fa-globe fa-2x tam_giac" aria-hidden="true"></i>
+				
+				<div class="fb_menu_items fb_menu_items2 being_hidden" id="fb_items_1">
+					<ul class="list-group">
+						<li class="list-group-item li_item">Someone liked your photos</li>
+						<li class="list-group-item li_item">Nguyen bka invited you to the hell</li>
+						<li class="list-group-item li_item">Huy ga commented on your post</li>
+						<li class="list-group-item li_item">Toan died yesterday! That's suck!!!</li>
+					</ul>
+				</div>
+			</div>
+
+			<div class="fb_messages">
+				<i onclick="menuIconEvent(this, 2)" id="fb_menu_icon_2" class="fa fa-comments fa-2x tam_giac" aria-hidden="true"></i>
+
+				<div class="fb_menu_items fb_menu_items2 being_hidden" id="fb_items_2">
+					<ul class="list-group">
+						<li class="list-group-item li_item">Toan: wtf are you saying???</li>
+						<li class="list-group-item li_item">Huy: what are you going now?</li>
+						<li class="list-group-item li_item">Nguyen bka: Where are you? Do you wanna go to a movie tonight??</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+
+		<!-- thẻ div sau sẽ hiển thị full màn hình khi menu đc click
+		và khi đó, muốn tắt menu chỉ cần click vào thẻ div này! -->
+		<div class="div_to_turn_off_menu being_hidden" id="div_turn_off"></div>
+	</div>
+
+	<script type="text/javascript" src="bai38.js"></script>
+</body>
+</html>

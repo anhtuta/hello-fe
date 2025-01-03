@@ -1,0 +1,73 @@
+* {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+    "Segoe UI Symbol";
+}
+a {
+  color: #00b222 !important;
+  text-decoration: none;
+}
+a:hover {
+  color: #00b222 !important;
+  text-decoration: underline;
+}
+.div-header {
+  font-size: 24px;
+  font-weight: bold;
+  margin: 10px 0;
+  color: #2199f9;
+}
+
+/* Downloaded from https://freefontsdownload.net/free-segoeuib-font-136420.htm */
+/* @font-face {
+    font-family: "Segoe UI";
+    src: url("./fonts/segoeui.ttf");
+}
+@font-face {
+    font-family: "Segoe UI";
+    font-weight: bold;
+    src: url("./fonts/segoeuib.ttf");
+} */
+
+/* Button */
+.btn {
+  background: #2196f3;
+  padding: 6px;
+  color: #fff;
+  border-radius: 3px;
+  display: inline-block;
+  cursor: pointer;
+  transition: 0.3s;
+  margin-bottom: 10px;
+  border: 0;
+}
+.btn:hover {
+  background: #0077d5;
+}
+.btn:disabled {
+  background: #d9d9d9;
+  color: #808080;
+  cursor: auto;
+}
+.btn:focus {
+  background: #33b002;
+}
+
+/* Input */
+.input-text {
+  padding: 0.375rem 0.75rem;
+  font-size: 1rem;
+  color: #495057;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+.input-text:focus {
+  color: #495057;
+  background-color: #fff;
+  border-color: #80bdff;
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}

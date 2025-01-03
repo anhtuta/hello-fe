@@ -1,0 +1,165 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Liliana Player</title>
+  <meta name="description" content="Lyric is the best!" />
+  <link rel="shortcut icon" type="image/png" href="./images/favicon.png" />
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/liliana-player.css">
+  <link rel="stylesheet" href="css/player.css" />
+  <script src="https://kit.fontawesome.com/60f0e96d4b.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
+</head>
+
+<body>
+  <div class="body_wrapper body-light">
+    <div>
+      <div id="hide_when_fullscreen">
+        <div class="div-header" >
+          <a href="./" title="Home">Liliana Player</a>
+          <i class="fas fa-moon btn_dark_mode" title="Dark mode"></i>
+        </div>
+
+        <div class="edit-time">Posted on: 29/1/2019. Last modified: 12/9/2021
+        </div>
+
+        <div id="all_songs"></div>
+
+        <div id="select_mp3_from_local">
+          <div class="all-song-label select_mp3_label">Want to play local song? Using this</div>
+          <div class="select_mp3_wrapper" style="display: none">
+            <textarea class="liliana-lyric custom-scrollbar" placeholder="Paste lyric here..."></textarea>
+            <div class="song-input-title">Or select lyric file</div>
+            <input id="btn_select_lyric" class="song-input" type="file" onchange="loadLyric(this, event)" accept=".trc">
+            <div class="song-input-title">Select an audio file to play</div>
+            <input id="btn_select_audio" class="song-input" type="file" onchange="loadSong(this, event)"
+              accept="audio/*">
+            <div id="btn_reset_audio">Reset</div>
+          </div>
+        </div>
+
+        <img style="max-width: 200px;display: none;" id="art" src="./images/background.jpg">
+      </div>
+
+      <div class="ll_player ll-paused" style="display: none">
+        <div class="info">
+
+          <div id="song_details"></div>
+        </div>
+
+        <div class="ll-btn-wrapper">
+          <button class="ll-shuffle" title="Shuffle">
+            <div class="arrow"></div>
+            <div class="arrow"></div>
+          </button>
+          <button class="ll-button ll-btn-prev" title="Previous">
+            <div class="arrow arrow-transform"></div>
+            <div class="arrow"></div>
+          </button>
+          <button class="ll-button ll-play-pause" title="Play">
+            <div class="arrow arrow-transform"></div>
+          </button>
+          <button class="ll-button ll-btn-next" title="Next">
+            <div class="arrow arrow-transform"></div>
+            <div class="arrow"></div>
+          </button>
+          <button class="ll-repeat" title="Repeat one"></button>
+        </div>
+        
+        <div class="time">
+          <span class="current-time">0:00</span>
+          <span class="progress"><span></span></span>
+          <span class="duration">0:00</span>
+        </div>
+
+        <audio
+          id="myAudio"
+          preload="metadata"
+        ></audio>
+      </div>
+
+      <div id="lyric_playground" style="display: none;">
+        <div id="div_left_wrapper" class="left_normal">
+          <img style="cursor: pointer" class="left_img spinning" src="./images/favicon.png" />
+          <div class="left_info">
+            <div class="left_title">This is title</div>
+            <div class="left_artist">This is artist</div>
+            <div class="left_album">This is album</div>
+          </div>
+        </div>
+        <div style="/*overflow: hidden*/">
+          <!-- Note: nếu ko dùng div-res-picture-bg thì phải cần cái này: style="display: none;"  -->
+          <div id="div_background" class="bg-image"></div>
+        </div>
+        <div id="div_result" class="lyric_normal custom-scrollbar div-res-picture-bg show-left-normal karaoke-mode"
+          style="text-align: center;"></div>
+        <div class="btn_sync_wrapper">
+          <div class="btn_toggle_setting" title="Settings">
+            <i class="fa fa-ellipsis-h"></i>
+          </div>
+          <div id="setting_wrapper" style="display: none;text-align: right;">
+            <div>
+              <span class="setting-legend">Lyric:</span>
+              <i class="fas fa-caret-up btn_sync_up" title="Sync lyric: -100ms"></i>
+              <i class="fas fa-caret-down btn_sync_down" title="Sync lyric: +100ms"></i>
+              <i class="setting_separator">|</i>
+              <i class="fa fa-align-left btn_align btn_align_left" title="Lyric left alignment"></i>
+              <i class="fa fa-align-center btn_align btn_align_center" title="Lyric center"></i>
+              <i class="fa fa-align-right btn_align btn_align_right" title="Lyric right alignment"></i>
+            </div>
+
+            <div>
+              <span class="setting-legend">Theme:</span>
+              <i class="fa fa-square btn_theme btn_theme_dark" title="Dark theme"></i>
+              <i class="fa fa-square btn_theme btn_theme_light" title="Light theme"></i>
+              <i class="fa fa-home btn_theme btn_theme_picture_bg" title="Picture background theme"></i>
+            </div>
+
+            <div>
+              <span class="setting-legend">Mode:</span>
+              <i class="fas fa-microphone-alt btn_theme btn_karaoke_mode" title="Karaoke mode"></i>
+              <i class="fas fa-smog btn_theme btn_blur_mode" title="Blur mode"></i>
+              <i class="fas fa-eye-slash btn_theme btn_word_appear" title="Word appears when time comes to it"></i>
+              <i class="fa fa-search-plus btn_theme btn_gigantic_line" title="Gigantic line"></i>
+            </div>
+
+            <div>
+              <span class="setting-legend">Speed:</span>
+              <i class="fa fa-plus-square btn_theme btn_increase_speed" title="Increase speed"></i>
+              <i class="fa fa-minus-square btn_theme btn_decrease_speed" title="Decrease speed"></i>  
+            </div>
+
+            <div>
+              <span class="setting-legend">Volume:</span>
+              <input type="range" min="1" max="100" value="100" class="slider-volume">
+            </div>
+          </div>
+        </div>
+        <div class="setting_bottom">
+          <i class="fa fa-arrows-alt btn_align btn_fullscreen"></i>
+        </div>
+        <div style="clear: both;"></div>
+      </div>
+    </div>
+  </div>
+</body>
+
+<script src="js/scroll.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/musicmetadata/2.0.2/musicmetadata.min.js"></script>
+<script src="js/toast-config.js"></script>
+<script src="js/config.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/svg.js"></script>
+<script src="js/variables.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/events.js"></script>
+<script src="js/data.js"></script>
+<script src="js/player.js"></script>
+<script src="js/lyric.js"></script>
+
+</html>

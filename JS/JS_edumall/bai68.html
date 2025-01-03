@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Slide demo</title>
+	<!-- <link rel="stylesheet" type="text/css" href="lib/bootstrap.css"> -->
+	<link rel="stylesheet" type="text/css" href="bai68.css">
+</head>
+<body>
+	<div class="all_slides">
+		<div class="each_slide_wrapper active_sld" id="each_slide_wrapper_1">
+			<div class="each_slide">
+				<div class="image pos_abs" style="background-image:url(images/slide1.jpg)"></div>
+				<img class="pos_abs bottom_image1" src="images/bottom_brown.png">
+				<div class="pos_abs img2_wrapper">
+					<img src="images/bottom_brown.png" class="bottom_image2 hidden" id="bottom_image2_1">
+				</div>
+				<div class="pos_abs img3_wrapper">
+					<img src="images/top_brown.png" class="top_image1">
+				</div>
+
+				<div class="texts pos_abs">
+					<h2>01</h2>
+					<h3>VEGETA</h3>
+					<div class="separator"></div>
+					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+					Duis sed lobortis urna. Aenean maximus imperdiet bibendum.
+					Pellentesque luctus velit sit amet erat consectetur, 
+					et ultrices ex rutrum.</p>
+					<div class="see_project_wrapper">
+						<a class="see_project" href="https://github.com/AnhtuTa/Javascript_Edumall"
+						target="_blank">See project</a>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="each_slide_wrapper hidden heigh_zero" id="each_slide_wrapper_2">
+			<div class="each_slide">
+				<div class="image pos_abs" style="background-image:url(images/slide2.jpg)"></div>
+				<img class="pos_abs bottom_image1" src="images/bottom_brown.png">
+				<div class="pos_abs img2_wrapper">
+					<img src="images/bottom_brown.png" class="bottom_image2 hidden" id="bottom_image2_2">
+				</div>
+				<div class="pos_abs img3_wrapper">
+					<img src="images/top_brown.png" class="top_image1">
+				</div>
+
+				<div class="texts pos_abs">
+					<h2>02</h2>
+					<h3>SON GO KU</h3>
+					<div class="separator"></div>
+					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+					Duis sed lobortis urna. Aenean maximus imperdiet bibendum.
+					Pellentesque luctus velit sit amet erat consectetur, 
+					et ultrices ex rutrum.</p>
+					<div class="see_project_wrapper">
+						<a class="see_project" href="https://github.com/AnhtuTa/Javascript_Edumall"
+						target="_blank">See project</a>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="each_slide_wrapper hidden heigh_zero" id="each_slide_wrapper_3">
+			<div class="each_slide">
+				<div class="image pos_abs" style="background-image:url(images/slide3.jpg)"></div>
+				<img class="pos_abs bottom_image1" src="images/bottom_brown.png">
+				<div class="pos_abs img2_wrapper">
+					<img src="images/bottom_brown.png" class="bottom_image2 hidden" id="bottom_image2_3">
+				</div>
+				<div class="pos_abs img3_wrapper">
+					<img src="images/top_brown.png" class="top_image1">
+				</div>
+				
+				<div class="texts pos_abs">
+					<h2>03</h2>
+					<h3>BEERUS-SAMA</h3>
+					<div class="separator"></div>
+					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+					Duis sed lobortis urna. Aenean maximus imperdiet bibendum.
+					Pellentesque luctus velit sit amet erat consectetur, 
+					et ultrices ex rutrum.</p>
+					<div class="see_project_wrapper">
+						<a class="see_project" href="https://github.com/AnhtuTa/Javascript_Edumall"
+						target="_blank">See project</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div class="slide_demo">
+			<ul>
+				<!-- Các giá trị của li phải là số thứ tự của slide.
+				Nếu có, ví dụ, 7 slides thì cần 7 li -->
+				<li class="active_slide" id="page_1">1</li>
+				<li id="page_2">2</li>
+				<li id="page_3">3</li>
+			</ul>
+		</div>
+	</div>
+
+
+	<h3>Đã xem xong video 85</h3>
+	<div style="padding: 10px; margin: 20px 10px; font-size: 20px; color: red;">
+		Khóa học này chỉ tập trung chủ yếu vào phần front-end của Javascript,
+		làm thế nào để thao tác trên file HTML, CSS, chứ ko đi sâu vào JS,
+		chẳng hạn như: class, object, prototype, closure,...</div>
+	<script type="text/javascript" src="bai68.js"></script>
+</body>
+</html>

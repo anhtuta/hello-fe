@@ -1,0 +1,1304 @@
+Tên của các foreign key phải KHÁC NHAU trong cùng 1 bảng và giữa các bảng!
+Tên của foreign key, tên index KHÔNG NÊN viết tiếng việt
+Tên của các index phải KHÁC NHAU
+
+=== Trigger
+
+CREATE TRIGGER Student_AFTER_INSERT AFTER INSERT ON `Student` FOR EACH ROW
+BEGIN
+    UPDATE SVClass SET numOfStudent = numOfStudent + 1 WHERE id = NEW.SVClass_id;
+END;
+
+//mặc định mysql tạo ra:
+CREATE DEFINER = CURRENT_USER TRIGGER `QLSV_db`.`Student_AFTER_INSERT` AFTER INSERT ON `Student` FOR EACH ROW
+BEGIN
+    UPDATE SVClass SET numOfStudent = numOfStudent + 1 WHERE id = NEW.SVClass_id;
+END;
+-- có thể viết ngắn hơn:
+CREATE TRIGGER Student_AFTER_DELETE AFTER DELETE ON `Student` FOR EACH ROW
+BEGIN
+	UPDATE SVClass SET numOfStudent = numOfStudent - 1 WHERE id = OLD.SVClass_id;
+END;
+
+-- thử cái này xem. Cái này là sau khi nhập lệnh tạo trigger giống ở trên thì MySQL nó thay đổi ntnay::
+CREATE DEFINER=`root`@`localhost` TRIGGER ScoreBoard_AFTER_INSERT AFTER INSERT ON `scoreboard` FOR EACH ROW
+BEGIN
+	UPDATE course SET registeredNum = registeredNum + 1 WHERE id = NEW.Course_id;
+END
+=== thêm trigger trong 1 table:
+USE `qlsv_db`;
+
+DELIMITER $$
+
+DROP TRIGGER IF EXISTS qlsv_db.Student_AFTER_UPDATE$$
+USE `qlsv_db`$$
+CREATE TRIGGER Student_AFTER_UPDATE AFTER UPDATE ON `Student` FOR EACH ROW
+BEGIN
+	UPDATE SVClass SET numOfStudent = numOfStudent + 1 WHERE id = NEW.SVClass_id_st;
+END;$$
+DELIMITER ;
+
+==== 
+khi thêm 1 column vào bảng, sau đó cho column đó có kiểu unique, thì sẽ xảy ra lỗi
+VD: thêm cột email và thêm unique key như sau:
+ALTER TABLE `user` 
+ADD UNIQUE INDEX `email_UNIQUE` (`email` ASC);
+
+chắc chắn sẽ lỗi:
+ERROR 1062: Duplicate entry '' for key 'email_UNIQUE'
+Lý do là vì: cột email vừa thêm vào nên các record ko có giá trị
+gì trên cột này, nghĩa là các record có giá trị email trùng nhau!
+Đó chính là lỗi duplicate!
+Do đó cần thêm các giá trị email cho từng record trước, sau đó mới
+thêm đc unique key
+
+ALTER TABLE `people`.`customers` 
+CHANGE COLUMN `salary` `salary` INT(11) NOT NULL DEFAULT 100 ;
+
+C:\ProgramData\Microsoft\Windows\Start Menu\Programs\MySQL>mysql -u root -p
+Enter password: ****
+mysql: Unknown OS character set 'cp1258'.
+mysql: Switching to the default character set 'latin1'.
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 10
+Server version: 5.7.15-log MySQL Community Server (GPL)
+
+Copyright (c) 2000, 2016, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| accounts           |
+| banhang            |
+| chat_db            |
+| dbo                |
+| dormitory          |
+| mydatabase         |
+| mydb               |
+| mysql              |
+| newschema          |
+| performance_schema |
+| quan_ly_sv_ktx     |
+| quanlydiemsinhvien |
+| quanlysv_ktx(tung) |
+| sakila             |
+| student_2          |
+| studentdb          |
+| sys                |
+| world              |
++--------------------+
+19 rows in set (0.00 sec)
+
+mysql> use student_2;
+Database changed
+mysql> show tables
+    -> ;
++---------------------+
+| Tables_in_student_2 |
++---------------------+
+| student             |
+| student_info        |
+| test                |
+| test2               |
++---------------------+
+4 rows in set (0.00 sec)
+
+mysql> select * from student_2;
+ERROR 1146 (42S02): Table 'student_2.student_2' doesn't exist
+mysql> select * from student;
++----------+------------+---------+---------------------------+
+| id       | name       | address | email                     |
++----------+------------+---------+---------------------------+
+| 18       | mabu       | NULL    | NULL                      |
+| 20       | anhtu      | hanoi   | anhtu@gmail.com           |
+| 20130001 | Son go han | tokyo   | gohan@gmail.com           |
+| 20130002 | Son GoKu   | saiyan  | khicon@gmail.com          |
+| 20130003 | son go ten | tokyo   | goten@gmail,com           |
+| 20130004 | Picollo    | Namek   | picollo_da_xanh@gmail.com |
+| 20130005 | bulma      | kyoto   | bulmasida@gmail.com       |
+| 20130006 | yamcha     | tokyo   | yamcha@gmail.com          |
+| 20130008 | fi-ze      | nam     | fize@yahoo.com            |
+| 20130010 | trunk      | saiyan  | trunk@gmail.com           |
+| 20130011 | calich     | saiyan  | calich@gmail.com          |
+| 20130012 | Picollo    | Namek   | picollo@yahoo.com         |
+| 20130013 | chichi     | tokyo   | chichi@yahoo.com          |
+| 20130014 | Picollo2   | Namek   | picollo2@yahoo.com        |
+| 20130015 | vegeta     | Saiyan  | vegeta@gmail.com          |
+| 20130016 | Krilin     | Earth   | Krilin@yahoo.com          |
+| 20130017 | vegeta2    | Saiyan  | vegeta@gmail.com          |
+| 20134509 | Ta anh tu  | Hanoi   | anhtu51195@gmail.com      |
++----------+------------+---------+---------------------------+
+18 rows in set (0.01 sec)
+
+mysql> select st.name from student st;
++------------+
+| name       |
++------------+
+| mabu       |
+| anhtu      |
+| Son go han |
+| Son GoKu   |
+| son go ten |
+| Picollo    |
+| bulma      |
+| yamcha     |
+| fi-ze      |
+| trunk      |
+| calich     |
+| Picollo    |
+| chichi     |
+| Picollo2   |
+| vegeta     |
+| Krilin     |
+| vegeta2    |
+| Ta anh tu  |
++------------+
+18 rows in set (0.00 sec)
+
+mysql> select st.name, st.id from student st;
++------------+----------+
+| name       | id       |
++------------+----------+
+| mabu       | 18       |
+| anhtu      | 20       |
+| Son go han | 20130001 |
+| Son GoKu   | 20130002 |
+| son go ten | 20130003 |
+| Picollo    | 20130004 |
+| bulma      | 20130005 |
+| yamcha     | 20130006 |
+| fi-ze      | 20130008 |
+| trunk      | 20130010 |
+| calich     | 20130011 |
+| Picollo    | 20130012 |
+| chichi     | 20130013 |
+| Picollo2   | 20130014 |
+| vegeta     | 20130015 |
+| Krilin     | 20130016 |
+| vegeta2    | 20130017 |
+| Ta anh tu  | 20134509 |
++------------+----------+
+18 rows in set (0.00 sec)
+
+mysql> select st.name, st.id from student st WHERE address='Saiyan';
++----------+----------+
+| name     | id       |
++----------+----------+
+| Son GoKu | 20130002 |
+| trunk    | 20130010 |
+| calich   | 20130011 |
+| vegeta   | 20130015 |
+| vegeta2  | 20130017 |
++----------+----------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT st.id, st.name FROM student st WHERE (st.id BETWEEN 20130010 AND 20130016);
++----------+----------+
+| id       | name     |
++----------+----------+
+| 20130010 | trunk    |
+| 20130011 | calich   |
+| 20130012 | Picollo  |
+| 20130013 | chichi   |
+| 20130014 | Picollo2 |
+| 20130015 | vegeta   |
+| 20130016 | Krilin   |
++----------+----------+
+7 rows in set (0.00 sec)
+
+mysql> SELECT
+    ->          st.id,
+    ->          st.name
+    -> FROM
+    ->          student st
+    -> WHERE
+    ->          st.id >= 20130010
+    -> AND
+    ->          st.id <= 20130016;
++----------+----------+
+| id       | name     |
++----------+----------+
+| 20130010 | trunk    |
+| 20130011 | calich   |
+| 20130012 | Picollo  |
+| 20130013 | chichi   |
+| 20130014 | Picollo2 |
+| 20130015 | vegeta   |
+| 20130016 | Krilin   |
++----------+----------+
+7 rows in set (0.03 sec)
+
+mysql> SELECT st.id, st.name FROM student st WHERE st.id LIKE '%00__';
++----------+------------+
+| id       | name       |
++----------+------------+
+| 20130001 | Son go han |
+| 20130002 | Son GoKu   |
+| 20130003 | son go ten |
+| 20130004 | Picollo    |
+| 20130005 | bulma      |
+| 20130006 | yamcha     |
+| 20130008 | fi-ze      |
+| 20130010 | trunk      |
+| 20130011 | calich     |
+| 20130012 | Picollo    |
+| 20130013 | chichi     |
+| 20130014 | Picollo2   |
+| 20130015 | vegeta     |
+| 20130016 | Krilin     |
+| 20130017 | vegeta2    |
++----------+------------+
+15 rows in set (0.00 sec)
+
+mysql>
+
+=======
+mysql> select 100+20;
++--------+
+| 100+20 |
++--------+
+|    120 |
++--------+
+1 row in set (0.08 sec)
+
+mysql> select 100*20;
++--------+
+| 100*20 |
++--------+
+|   2000 |
++--------+
+1 row in set (0.02 sec)
+
+mysql> show databases
+    -> ;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| accounts           |
+| banhang            |
+| chat_db            |
+| dbo                |
+| dormitory          |
+| mydatabase         |
+| mydb               |
+| mysql              |
+| newschema          |
+| performance_schema |
+| quan_ly_sv_ktx     |
+| quanlydiemsinhvien |
+| quanlysv_ktx(tung) |
+| sakila             |
+| student_2          |
+| studentdb          |
+| sys                |
+| world              |
++--------------------+
+19 rows in set (0.43 sec)
+
+mysql> use student_2;
+Database changed
+mysql> show tables
+    -> ;
++---------------------+
+| Tables_in_student_2 |
++---------------------+
+| student             |
+| student_info        |
+| test                |
+| test2               |
++---------------------+
+4 rows in set (0.01 sec)
+
+mysql> select * from student;
++----------+------------+---------+---------------------------+
+| id       | name       | address | email                     |
++----------+------------+---------+---------------------------+
+| 18       | mabu       | NULL    | NULL                      |
+| 20       | anhtu      | hanoi   | anhtu@gmail.com           |
+| 20130001 | Son go han | tokyo   | gohan@gmail.com           |
+| 20130002 | Son GoKu   | saiyan  | khicon@gmail.com          |
+| 20130003 | son go ten | tokyo   | goten@gmail,com           |
+| 20130004 | Picollo    | Namek   | picollo_da_xanh@gmail.com |
+| 20130005 | bulma      | kyoto   | bulmasida@gmail.com       |
+| 20130006 | yamcha     | tokyo   | yamcha@gmail.com          |
+| 20130008 | fi-ze      | nam     | fize@yahoo.com            |
+| 20130010 | trunk      | saiyan  | trunk@gmail.com           |
+| 20130011 | calich     | saiyan  | calich@gmail.com          |
+| 20130012 | Picollo    | Namek   | picollo@yahoo.com         |
+| 20130013 | chichi     | tokyo   | chichi@yahoo.com          |
+| 20130014 | Picollo2   | Namek   | picollo2@yahoo.com        |
+| 20130015 | vegeta     | Saiyan  | vegeta@gmail.com          |
+| 20130016 | Krilin     | Earth   | Krilin@yahoo.com          |
+| 20130017 | vegeta2    | Saiyan  | vegeta@gmail.com          |
+| 20134509 | Ta anh tu  | Hanoi   | anhtu51195@gmail.com      |
++----------+------------+---------+---------------------------+
+18 rows in set (0.08 sec)
+
+mysql> SELECT * FROM student WHERE id >= 20130005;
++----------+-----------+---------+----------------------+
+| id       | name      | address | email                |
++----------+-----------+---------+----------------------+
+| 20130005 | bulma     | kyoto   | bulmasida@gmail.com  |
+| 20130006 | yamcha    | tokyo   | yamcha@gmail.com     |
+| 20130008 | fi-ze     | nam     | fize@yahoo.com       |
+| 20130010 | trunk     | saiyan  | trunk@gmail.com      |
+| 20130011 | calich    | saiyan  | calich@gmail.com     |
+| 20130012 | Picollo   | Namek   | picollo@yahoo.com    |
+| 20130013 | chichi    | tokyo   | chichi@yahoo.com     |
+| 20130014 | Picollo2  | Namek   | picollo2@yahoo.com   |
+| 20130015 | vegeta    | Saiyan  | vegeta@gmail.com     |
+| 20130016 | Krilin    | Earth   | Krilin@yahoo.com     |
+| 20130017 | vegeta2   | Saiyan  | vegeta@gmail.com     |
+| 20134509 | Ta anh tu | Hanoi   | anhtu51195@gmail.com |
++----------+-----------+---------+----------------------+
+12 rows in set (0.05 sec)
+
+mysql> SELECT * FROM student WHERE id IN (20130010, 20130014);
++----------+----------+---------+--------------------+
+| id       | name     | address | email              |
++----------+----------+---------+--------------------+
+| 20130010 | trunk    | saiyan  | trunk@gmail.com    |
+| 20130014 | Picollo2 | Namek   | picollo2@yahoo.com |
++----------+----------+---------+--------------------+
+2 rows in set (0.03 sec)
+
+mysql> SELECT * FROM student WHERE id BETWEEN 20130010 AND 20130014;
++----------+----------+---------+--------------------+
+| id       | name     | address | email              |
++----------+----------+---------+--------------------+
+| 20130010 | trunk    | saiyan  | trunk@gmail.com    |
+| 20130011 | calich   | saiyan  | calich@gmail.com   |
+| 20130012 | Picollo  | Namek   | picollo@yahoo.com  |
+| 20130013 | chichi   | tokyo   | chichi@yahoo.com   |
+| 20130014 | Picollo2 | Namek   | picollo2@yahoo.com |
++----------+----------+---------+--------------------+
+5 rows in set (0.00 sec)
+
+mysql>
+
+======
+
+
+mysql> select * from student;
++----+------------+---------+---------------------------+
+| id | name       | address | email                     |
++----+------------+---------+---------------------------+
+| 11 | Son go han | tokyo   | gohan@gmail.com           |
+| 12 | Son GoKu   | saiyan  | khicon@gmail.com          |
+| 13 | son go ten | tokyo   | goten@gmail,com           |
+| 16 | Picollo    | Namek   | picollo_da_xanh@gmail.com |
+| 18 | mabu       | NULL    | NULL                      |
+| 20 | anhtu      | hanoi   | anhtu@gmail.com           |
+| 22 | bulma      | kyoto   | bulmasida@gmail.com       |
+| 24 | yamcha     | tokyo   | yamcha@gmail.com          |
+| 31 | fi-ze      | nam     | fize@yahoo.com            |
+| 39 | trunk      | saiyan  | trunk@gmail.com           |
+| 52 | calich     | saiyan  | calich@gmail.com          |
+| 55 | Picollo    | Namek   | picollo@yahoo.com         |
+| 58 | chichi     | tokyo   | chichi@yahoo.com          |
+| 60 | vegeta     | Saiyan  | vegeta@gmail.com          |
+| 61 | Picollo2   | Namek   | picollo2@yahoo.com        |
+| 65 | vegeta2    | Saiyan  | vegeta@gmail.com          |
+| 69 | Krilin     | Earth   | Krilin@yahoo.com          |
+| 72 | Ta anh tu  | Hanoi   | anhtu51195@gmail.com      |
++----+------------+---------+---------------------------+
+18 rows in set (0.00 sec)
+
+mysql> SELECT age FROM student WHERE id > 40;
+ERROR 1054 (42S22): Unknown column 'age' in 'field list'
+mysql> SELECT id FROM student WHERE id > 40;
++----+
+| id |
++----+
+| 52 |
+| 55 |
+| 58 |
+| 60 |
+| 61 |
+| 65 |
+| 69 |
+| 72 |
++----+
+8 rows in set (0.00 sec)
+
+mysql> SELECT id FROM student WHERE address = 'Saiyan';
++----+
+| id |
++----+
+| 12 |
+| 39 |
+| 52 |
+| 60 |
+| 65 |
++----+
+5 rows in set (0.02 sec)
+
+mysql> SELECT * FROM student WHERE id > ALL (SELECT id FROM student WHERE address = 'Saiyan');
++----+-----------+---------+----------------------+
+| id | name      | address | email                |
++----+-----------+---------+----------------------+
+| 69 | Krilin    | Earth   | Krilin@yahoo.com     |
+| 72 | Ta anh tu | Hanoi   | anhtu51195@gmail.com |
++----+-----------+---------+----------------------+
+2 rows in set (0.05 sec)
+
+mysql> SELECT (20+5) AS ADDITION;
++----------+
+| ADDITION |
++----------+
+|       25 |
++----------+
+1 row in set (0.02 sec)
+
+mysql> SELECT COUNT(*) AS RECORDS FROM student;
++---------+
+| RECORDS |
++---------+
+|      18 |
++---------+
+1 row in set (0.00 sec)
+
+mysql> SELECT CURRENT_TIMESTAMP;
++---------------------+
+| CURRENT_TIMESTAMP   |
++---------------------+
+| 2017-07-06 00:13:13 |
++---------------------+
+1 row in set (0.03 sec)
+
+mysql> SELECT GETDATE();
+ERROR 1305 (42000): FUNCTION student_2.GETDATE does not exist
+mysql> SELECT GETDATE();;
+ERROR 1305 (42000): FUNCTION student_2.GETDATE does not exist
+ERROR:
+No query specified
+
+mysql> CREATE DATABASE people;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| accounts           |
+| banhang            |
+| chat_db            |
+| dbo                |
+| dormitory          |
+| mydatabase         |
+| mydb               |
+| mysql              |
+| newschema          |
+| people             |
+| performance_schema |
+| quan_ly_sv_ktx     |
+| quanlydiemsinhvien |
+| quanlysv_ktx(tung) |
+| sakila             |
+| student_2          |
+| studentdb          |
+| sys                |
+| world              |
++--------------------+
+20 rows in set (0.00 sec)
+
+mysql> DROP DATABASE mydb;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| accounts           |
+| banhang            |
+| chat_db            |
+| dbo                |
+| dormitory          |
+| mydatabase         |
+| mysql              |
+| newschema          |
+| people             |
+| performance_schema |
+| quan_ly_sv_ktx     |
+| quanlydiemsinhvien |
+| quanlysv_ktx(tung) |
+| sakila             |
+| student_2          |
+| studentdb          |
+| sys                |
+| world              |
++--------------------+
+19 rows in set (0.00 sec)
+
+mysql>
+
+=======
+
+mysql> DROP DATABASE newschema;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> DROP DATABASE mydatabase;
+Query OK, 1 row affected (0.27 sec)
+
+mysql> SHOW DATABASES;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| accounts           |
+| banhang            |
+| chat_db            |
+| dbo                |
+| dormitory          |
+| mysql              |
+| people             |
+| performance_schema |
+| quan_ly_sv_ktx     |
+| quanlydiemsinhvien |
+| quanlysv_ktx(tung) |
+| sakila             |
+| student_2          |
+| studentdb          |
+| sys                |
+| world              |
++--------------------+
+17 rows in set (0.00 sec)
+
+mysql> USE person;
+ERROR 1049 (42000): Unknown database 'person'
+mysql> USE people;
+Database changed
+mysql> CREATE TABLE customers (
+    -> id INT NOT NULL,
+    -> name VARCHAR(30) NOT NULL,
+    -> age INT NOT NULL,
+    -> address VARCHAR(25),
+    -> salary int,
+    -> PRIMARY KEY (id)
+    -> );
+Query OK, 0 rows affected (0.28 sec)
+
+mysql> DESC customers
+    -> ;
++---------+-------------+------+-----+---------+-------+
+| Field   | Type        | Null | Key | Default | Extra |
++---------+-------------+------+-----+---------+-------+
+| id      | int(11)     | NO   | PRI | NULL    |       |
+| name    | varchar(30) | NO   |     | NULL    |       |
+| age     | int(11)     | NO   |     | NULL    |       |
+| address | varchar(25) | YES  |     | NULL    |       |
+| salary  | int(11)     | YES  |     | NULL    |       |
++---------+-------------+------+-----+---------+-------+
+5 rows in set (0.00 sec)
+
+mysql> CREATE TABLE person AS SELECT id, name, age FROM customers;
+Query OK, 0 rows affected (0.39 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> DESC person;
++-------+-------------+------+-----+---------+-------+
+| Field | Type        | Null | Key | Default | Extra |
++-------+-------------+------+-----+---------+-------+
+| id    | int(11)     | NO   |     | NULL    |       |
+| name  | varchar(30) | NO   |     | NULL    |       |
+| age   | int(11)     | NO   |     | NULL    |       |
++-------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> show tables;
++------------------+
+| Tables_in_people |
++------------------+
+| customers        |
+| person           |
++------------------+
+2 rows in set (0.00 sec)
+
+mysql> DROP TABLE person;
+Query OK, 0 rows affected (0.14 sec)
+
+mysql> show tables;
++------------------+
+| Tables_in_people |
++------------------+
+| customers        |
++------------------+
+1 row in set (0.00 sec)
+
+mysql> INSERT INTO customers VALUES (11, 'Anhtu', 23, 'Hanoi', 0);
+Query OK, 1 row affected (0.06 sec)
+
+mysql> INSERT INTO customers VALUES (12, 'nguyen', 21, 'Hanoi', 1000);
+Query OK, 1 row affected (0.05 sec)
+
+mysql> INSERT INTO customers(id, name, age, address, salary) VALUES(13, 'nam', 22, 'Hai phoong', 512);
+Query OK, 1 row affected (0.03 sec)
+
+mysql> SELECT * FROM customers;
++----+--------+-----+------------+--------+
+| id | name   | age | address    | salary |
++----+--------+-----+------------+--------+
+| 11 | Anhtu  |  23 | Hanoi      |      0 |
+| 12 | nguyen |  21 | Hanoi      |   1000 |
+| 13 | nam    |  22 | Hai phoong |    512 |
++----+--------+-----+------------+--------+
+3 rows in set (0.00 sec)
+
+mysql> USE student_2;
+Database changed
+mysql> SELECT * FROM student;
++----+------------+---------+---------------------------+
+| id | name       | address | email                     |
++----+------------+---------+---------------------------+
+| 11 | Son go han | tokyo   | gohan@gmail.com           |
+| 12 | Son GoKu   | saiyan  | khicon@gmail.com          |
+| 13 | son go ten | tokyo   | goten@gmail,com           |
+| 16 | Picollo    | Namek   | picollo_da_xanh@gmail.com |
+| 18 | mabu       | NULL    | NULL                      |
+| 20 | anhtu      | hanoi   | anhtu@gmail.com           |
+| 22 | bulma      | kyoto   | bulmasida@gmail.com       |
+| 24 | yamcha     | tokyo   | yamcha@gmail.com          |
+| 31 | fi-ze      | nam     | fize@yahoo.com            |
+| 39 | trunk      | saiyan  | trunk@gmail.com           |
+| 52 | calich     | saiyan  | calich@gmail.com          |
+| 55 | Picollo    | Namek   | picollo@yahoo.com         |
+| 58 | chichi     | tokyo   | chichi@yahoo.com          |
+| 60 | vegeta     | Saiyan  | vegeta@gmail.com          |
+| 61 | Picollo2   | Namek   | picollo2@yahoo.com        |
+| 65 | vegeta2    | Saiyan  | vegeta@gmail.com          |
+| 69 | Krilin     | Earth   | Krilin@yahoo.com          |
+| 72 | Ta anh tu  | Hanoi   | anhtu51195@gmail.com      |
++----+------------+---------+---------------------------+
+18 rows in set (0.01 sec)
+
+mysql> UPDATE student SET address='nowhere' WHERE id=31;
+Query OK, 1 row affected (0.08 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> SELECT * FROM student;
++----+------------+---------+---------------------------+
+| id | name       | address | email                     |
++----+------------+---------+---------------------------+
+| 11 | Son go han | tokyo   | gohan@gmail.com           |
+| 12 | Son GoKu   | saiyan  | khicon@gmail.com          |
+| 13 | son go ten | tokyo   | goten@gmail,com           |
+| 16 | Picollo    | Namek   | picollo_da_xanh@gmail.com |
+| 18 | mabu       | NULL    | NULL                      |
+| 20 | anhtu      | hanoi   | anhtu@gmail.com           |
+| 22 | bulma      | kyoto   | bulmasida@gmail.com       |
+| 24 | yamcha     | tokyo   | yamcha@gmail.com          |
+| 31 | fi-ze      | nowhere | fize@yahoo.com            |
+| 39 | trunk      | saiyan  | trunk@gmail.com           |
+| 52 | calich     | saiyan  | calich@gmail.com          |
+| 55 | Picollo    | Namek   | picollo@yahoo.com         |
+| 58 | chichi     | tokyo   | chichi@yahoo.com          |
+| 60 | vegeta     | Saiyan  | vegeta@gmail.com          |
+| 61 | Picollo2   | Namek   | picollo2@yahoo.com        |
+| 65 | vegeta2    | Saiyan  | vegeta@gmail.com          |
+| 69 | Krilin     | Earth   | Krilin@yahoo.com          |
+| 72 | Ta anh tu  | Hanoi   | anhtu51195@gmail.com      |
++----+------------+---------+---------------------------+
+18 rows in set (0.00 sec)
+
+mysql> DELETE FROM student WHERE id=31;
+Query OK, 1 row affected (0.09 sec)
+
+mysql> SELECT * FROM student;
++----+------------+---------+---------------------------+
+| id | name       | address | email                     |
++----+------------+---------+---------------------------+
+| 11 | Son go han | tokyo   | gohan@gmail.com           |
+| 12 | Son GoKu   | saiyan  | khicon@gmail.com          |
+| 13 | son go ten | tokyo   | goten@gmail,com           |
+| 16 | Picollo    | Namek   | picollo_da_xanh@gmail.com |
+| 18 | mabu       | NULL    | NULL                      |
+| 20 | anhtu      | hanoi   | anhtu@gmail.com           |
+| 22 | bulma      | kyoto   | bulmasida@gmail.com       |
+| 24 | yamcha     | tokyo   | yamcha@gmail.com          |
+| 39 | trunk      | saiyan  | trunk@gmail.com           |
+| 52 | calich     | saiyan  | calich@gmail.com          |
+| 55 | Picollo    | Namek   | picollo@yahoo.com         |
+| 58 | chichi     | tokyo   | chichi@yahoo.com          |
+| 60 | vegeta     | Saiyan  | vegeta@gmail.com          |
+| 61 | Picollo2   | Namek   | picollo2@yahoo.com        |
+| 65 | vegeta2    | Saiyan  | vegeta@gmail.com          |
+| 69 | Krilin     | Earth   | Krilin@yahoo.com          |
+| 72 | Ta anh tu  | Hanoi   | anhtu51195@gmail.com      |
++----+------------+---------+---------------------------+
+17 rows in set (0.02 sec)
+
+mysql> SELECT * FROM student LIMIT 3;
++----+------------+---------+------------------+
+| id | name       | address | email            |
++----+------------+---------+------------------+
+| 11 | Son go han | tokyo   | gohan@gmail.com  |
+| 12 | Son GoKu   | saiyan  | khicon@gmail.com |
+| 13 | son go ten | tokyo   | goten@gmail,com  |
++----+------------+---------+------------------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT * FROM student ORDER BY address LIMIT 3;
++----+--------+---------+------------------+
+| id | name   | address | email            |
++----+--------+---------+------------------+
+| 18 | mabu   | NULL    | NULL             |
+| 69 | Krilin | Earth   | Krilin@yahoo.com |
+| 20 | anhtu  | hanoi   | anhtu@gmail.com  |
++----+--------+---------+------------------+
+3 rows in set (0.03 sec)
+
+mysql> SELECT * FROM student ORDER BY id DESC LIMIT 3;
++----+-----------+---------+----------------------+
+| id | name      | address | email                |
++----+-----------+---------+----------------------+
+| 72 | Ta anh tu | Hanoi   | anhtu51195@gmail.com |
+| 69 | Krilin    | Earth   | Krilin@yahoo.com     |
+| 65 | vegeta2   | Saiyan  | vegeta@gmail.com     |
++----+-----------+---------+----------------------+
+3 rows in set (0.00 sec)
+
+mysql>
+
+
+===== các lệnh IN, BETWEEN,...
+
+mysql> use sakila
+Database changed
+mysql> SELECT * FROM actor WHERE last_name IN("DAVIS","ALLEN","TRACY");
++----------+------------+-----------+---------------------+
+| actor_id | first_name | last_name | last_update         |
++----------+------------+-----------+---------------------+
+|      118 | CUBA       | ALLEN     | 2006-02-15 04:34:33 |
+|      145 | KIM        | ALLEN     | 2006-02-15 04:34:33 |
+|      194 | MERYL      | ALLEN     | 2006-02-15 04:34:33 |
+|        4 | JENNIFER   | DAVIS     | 2006-02-15 04:34:33 |
+|      101 | SUSAN      | DAVIS     | 2006-02-15 04:34:33 |
+|      110 | SUSAN      | DAVIS     | 2006-02-15 04:34:33 |
+|       20 | LUCILLE    | TRACY     | 2006-02-15 04:34:33 |
+|      117 | RENEE      | TRACY     | 2006-02-15 04:34:33 |
++----------+------------+-----------+---------------------+
+8 rows in set (0.02 sec)
+
+mysql> SELECT * FROM actor WHERE actor_id BETWEEN 20 AND 24
+    -> ;
++----------+------------+-----------+---------------------+
+| actor_id | first_name | last_name | last_update         |
++----------+------------+-----------+---------------------+
+|       20 | LUCILLE    | TRACY     | 2006-02-15 04:34:33 |
+|       21 | KIRSTEN    | PALTROW   | 2006-02-15 04:34:33 |
+|       22 | ELVIS      | MARX      | 2006-02-15 04:34:33 |
+|       23 | SANDRA     | KILMER    | 2006-02-15 04:34:33 |
+|       24 | CAMERON    | STREEP    | 2006-02-15 04:34:33 |
++----------+------------+-----------+---------------------+
+5 rows in set (0.08 sec)
+
+mysql> USE banhang;
+Database changed
+
+mysql> SELECT * FROM product;
++-----------+--------------+------------+----------+-------+
+| productID | productName  | category   | supplier | price |
++-----------+--------------+------------+----------+-------+
+|         1 | s?a bò       | beverage   | anhtu    |  2100 |
+|         2 | mì tôm       | food-stuff | nguyên   |  3200 |
+|         3 | rau c?i      | food-stuff | anhtu    |  5000 |
+|         4 | cà phê       | beverage   | nguyên   |  7000 |
+|         5 | n??c mía     | soft-drink | anhtu    |  6000 |
+|         6 | trà ?á       | soft-drink | nguyên   |  2000 |
+|         7 | n??c v?i     | beverage   | nguyên   |  2000 |
+|         8 | bánh m? pate | food       | nam      | 10000 |
+|         9 | xúc xích     | food       | trung    |  8000 |
+|        10 | th?t bò      | food-stuff | nam      | 50000 |
+|        11 | th?t l?n     | food-stuff | nguyên   | 34000 |
+|        12 | banana       | fruit      | anhtu    | 20000 |
+|        13 | grape        | beverage   | nguyên   |  2000 |
+|        14 | strawberry   | fruit      | trung    |  2300 |
+|        15 | watermalon   | fruit      | nam      |  3400 |
+|        16 | guava        | fruit      | anhtu    |  4900 |
+|        17 | mango        | fruit      | nam      |  4400 |
+|        18 | coca         | soft-drink | anhtu    |  3220 |
++-----------+--------------+------------+----------+-------+
+18 rows in set (0.00 sec)
+
+mysql> SELECT category,
+    ->  COUNT(category),
+    ->  COUNT(catego^C),
+mysql> SELECT category,
+    ->  COUNT(category) AS count_cate,
+    ->  SUM(price) AS sum_price,
+    ->  AVG(price) AS average_price
+    -> FROM product
+    -> GROUP BY category;
++------------+------------+-----------+---------------+
+| category   | count_cate | sum_price | average_price |
++------------+------------+-----------+---------------+
+| beverage   |          4 |     13100 |          3275 |
+| food       |          2 |     18000 |          9000 |
+| food-stuff |          4 |     92200 |         23050 |
+| fruit      |          5 |     35000 |          7000 |
+| soft-drink |          3 |     11220 |          3740 |
++------------+------------+-----------+---------------+
+5 rows in set (0.01 sec)
+
+mysql> SELECT category,
+    ->  COUNT(category),
+    ->  COUNT(category),^C
+mysql> SELECT category,
+    ->  COUNT(category) AS count_category,
+    ->  SUM(price) AS sum_price,
+    ->  AVG(price) AS average_price
+    -> FROM product
+    -> GROUP BY category
+    -> HAVING COUNT(category) > 3;
++------------+----------------+-----------+---------------+
+| category   | count_category | sum_price | average_price |
++------------+----------------+-----------+---------------+
+| beverage   |              4 |     13100 |          3275 |
+| food-stuff |              4 |     92200 |         23050 |
+| fruit      |              5 |     35000 |          7000 |
++------------+----------------+-----------+---------------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT COUNT(category) FROM product;
++-----------------+
+| COUNT(category) |
++-----------------+
+|              18 |
++-----------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT COUNT(DISTINCT category) FROM product;
++--------------------------+
+| COUNT(DISTINCT category) |
++--------------------------+
+|                        5 |
++--------------------------+
+1 row in set (0.05 sec)
+
+mysql> SELECT category,
+    ->  COUNT(category)
+    -> FROM product
+    -> GROUP BY category;
++------------+-----------------+
+| category   | COUNT(category) |
++------------+-----------------+
+| beverage   |               4 |
+| food       |               2 |
+| food-stuff |               4 |
+| fruit      |               5 |
+| soft-drink |               3 |
++------------+-----------------+
+5 rows in set (0.00 sec)
+
+mysql>
+
+==========Ví dụ về các lệnh JOIN trong mySQL:
+
+mysql> USE banhang;
+Database changed
+mysql> SELECT * FROM product;
++-----------+--------------+------------+----------+-------+
+| productID | productName  | category   | supplier | price |
++-----------+--------------+------------+----------+-------+
+|         1 | s?a bò       | beverage   | anhtu    |  2100 |
+|         2 | mì tôm       | food-stuff | nguyên   |  3200 |
+|         3 | rau c?i      | food-stuff | anhtu    |  5000 |
+|         4 | cà phê       | beverage   | nguyên   |  7000 |
+|         5 | n??c mía     | soft-drink | anhtu    |  6000 |
+|         6 | trà ?á       | soft-drink | nguyên   |  2000 |
+|         7 | n??c v?i     | beverage   | nguyên   |  2000 |
+|         8 | bánh m? pate | food       | nam      | 10000 |
+|         9 | xúc xích     | food       | trung    |  8000 |
+|        10 | th?t bò      | food-stuff | nam      | 50000 |
+|        11 | th?t l?n     | food-stuff | nguyên   | 34000 |
+|        12 | banana       | fruit      | anhtu    | 20000 |
+|        13 | grape        | beverage   | nguyên   |  2000 |
+|        14 | strawberry   | fruit      | trung    |  2300 |
+|        15 | watermalon   | fruit      | nam      |  3400 |
+|        16 | guava        | fruit      | anhtu    |  4900 |
+|        17 | mango        | fruit      | nam      |  4400 |
+|        18 | coca         | soft-drink | anhtu    |  3220 |
++-----------+--------------+------------+----------+-------+
+18 rows in set (0.00 sec)
+
+mysql> SELECT * FROM invoice;
++-----------+-----------+---------------------+----------+
+| invoiceID | productID | purchaseDate        | quantity |
++-----------+-----------+---------------------+----------+
+|         1 |         2 | 2017-07-11 00:00:00 |        3 |
+|         2 |         7 | 2017-07-10 00:00:00 |        7 |
+|         3 |        11 | 2017-07-19 00:00:00 |        1 |
+|         4 |         5 | 2017-07-17 00:00:00 |        2 |
++-----------+-----------+---------------------+----------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT pr.productID, pr.productName, pr.price, in.invoiceID, in.productID, in.quantity
+    -> FROM product pr
+    -> INNER JOIN invoice in
+    -> ON pr.productID = in.productID;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'in
+ON pr.productID = in.productID' at line 3
+
+NHẬN XÉT: ko đc đặt tên Alias trùng với từ khóa, như trường hợp trên là trùng từ khóa "IN"
+
+mysql> SELECT pr.productID, pr.productName, pr.price, inv.invoiceID, inv.productID, inv.quantity
+    -> FROM product pr
+    -> INNER JOIN invoice inv
+    -> ON pr.productID = inv.productID;
++-----------+-------------+-------+-----------+-----------+----------+
+| productID | productName | price | invoiceID | productID | quantity |
++-----------+-------------+-------+-----------+-----------+----------+
+|         2 | mì tôm      |  3200 |         1 |         2 |        3 |
+|         7 | n??c v?i    |  2000 |         2 |         7 |        7 |
+|        11 | th?t l?n    | 34000 |         3 |        11 |        1 |
+|         5 | n??c mía    |  6000 |         4 |         5 |        2 |
++-----------+-------------+-------+-----------+-----------+----------+
+4 rows in set (0.05 sec)
+
+mysql> SELECT pr.productID, pr.productName, pr.price, inv.invoiceID, inv.productID, inv.quantity
+    -> FROM product pr
+    -> LEFT OUTER JOIN invoice inv
+    -> ON pr.productID = inv.productID;
++-----------+--------------+-------+-----------+-----------+----------+
+| productID | productName  | price | invoiceID | productID | quantity |
++-----------+--------------+-------+-----------+-----------+----------+
+|         2 | mì tôm       |  3200 |         1 |         2 |        3 |
+|         7 | n??c v?i     |  2000 |         2 |         7 |        7 |
+|        11 | th?t l?n     | 34000 |         3 |        11 |        1 |
+|         5 | n??c mía     |  6000 |         4 |         5 |        2 |
+|         1 | s?a bò       |  2100 |      NULL |      NULL |     NULL |
+|         3 | rau c?i      |  5000 |      NULL |      NULL |     NULL |
+|         4 | cà phê       |  7000 |      NULL |      NULL |     NULL |
+|         6 | trà ?á       |  2000 |      NULL |      NULL |     NULL |
+|         8 | bánh m? pate | 10000 |      NULL |      NULL |     NULL |
+|         9 | xúc xích     |  8000 |      NULL |      NULL |     NULL |
+|        10 | th?t bò      | 50000 |      NULL |      NULL |     NULL |
+|        12 | banana       | 20000 |      NULL |      NULL |     NULL |
+|        13 | grape        |  2000 |      NULL |      NULL |     NULL |
+|        14 | strawberry   |  2300 |      NULL |      NULL |     NULL |
+|        15 | watermalon   |  3400 |      NULL |      NULL |     NULL |
+|        16 | guava        |  4900 |      NULL |      NULL |     NULL |
+|        17 | mango        |  4400 |      NULL |      NULL |     NULL |
+|        18 | coca         |  3220 |      NULL |      NULL |     NULL |
++-----------+--------------+-------+-----------+-----------+----------+
+18 rows in set (0.05 sec)
+
+mysql> SELECT pr.productID, pr.productName, pr.price, inv.invoiceID, inv.productID, inv.quantity
+    -> FROM product pr
+    -> RIGHT OUTER JOIN invoice inv
+    -> ON pr.productID = inv.productID;
++-----------+-------------+-------+-----------+-----------+----------+
+| productID | productName | price | invoiceID | productID | quantity |
++-----------+-------------+-------+-----------+-----------+----------+
+|         2 | mì tôm      |  3200 |         1 |         2 |        3 |
+|         7 | n??c v?i    |  2000 |         2 |         7 |        7 |
+|        11 | th?t l?n    | 34000 |         3 |        11 |        1 |
+|         5 | n??c mía    |  6000 |         4 |         5 |        2 |
++-----------+-------------+-------+-----------+-----------+----------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT pr.productID, pr.productName, pr.price, inv.invoiceID, inv.productID, inv.quantity
+    -> FROM product pr
+    -> FULL OUTER JOIN invoice inv
+    -> ON pr.productID = inv.productID;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'FULL OUTER JOIN invoice inv
+ON pr.productID = inv.productID' at line 3
+
+NHẬN XÉT: do MySQL ko hỗ trợ lện FULL JOIN nên ta phải dùng kết hợp cả RIGHT JOIN và LEFT JOIN như sau:
+
+mysql> SELECT pr.productID, pr.productName, pr.price, inv.invoiceID, inv.productID, inv.quantity
+    -> FROM product pr
+    -> RIGHT JOIN invoice inv
+    -> ON pr.productID = inv.productID
+    ->
+    -> UNION ALL
+    ->
+    -> SELECT pr.productID, pr.productName, pr.price, inv.invoiceID, inv.productID, inv.quantity
+    -> FROM product pr
+    -> LEFT JOIN invoice inv
+    -> ON pr.productID = inv.productID;
++-----------+--------------+-------+-----------+-----------+----------+
+| productID | productName  | price | invoiceID | productID | quantity |
++-----------+--------------+-------+-----------+-----------+----------+
+|         2 | mì tôm       |  3200 |         1 |         2 |        3 |
+|         7 | n??c v?i     |  2000 |         2 |         7 |        7 |
+|        11 | th?t l?n     | 34000 |         3 |        11 |        1 |
+|         5 | n??c mía     |  6000 |         4 |         5 |        2 |
+|         2 | mì tôm       |  3200 |         1 |         2 |        3 |
+|         7 | n??c v?i     |  2000 |         2 |         7 |        7 |
+|        11 | th?t l?n     | 34000 |         3 |        11 |        1 |
+|         5 | n??c mía     |  6000 |         4 |         5 |        2 |
+|         1 | s?a bò       |  2100 |      NULL |      NULL |     NULL |
+|         3 | rau c?i      |  5000 |      NULL |      NULL |     NULL |
+|         4 | cà phê       |  7000 |      NULL |      NULL |     NULL |
+|         6 | trà ?á       |  2000 |      NULL |      NULL |     NULL |
+|         8 | bánh m? pate | 10000 |      NULL |      NULL |     NULL |
+|         9 | xúc xích     |  8000 |      NULL |      NULL |     NULL |
+|        10 | th?t bò      | 50000 |      NULL |      NULL |     NULL |
+|        12 | banana       | 20000 |      NULL |      NULL |     NULL |
+|        13 | grape        |  2000 |      NULL |      NULL |     NULL |
+|        14 | strawberry   |  2300 |      NULL |      NULL |     NULL |
+|        15 | watermalon   |  3400 |      NULL |      NULL |     NULL |
+|        16 | guava        |  4900 |      NULL |      NULL |     NULL |
+|        17 | mango        |  4400 |      NULL |      NULL |     NULL |
+|        18 | coca         |  3220 |      NULL |      NULL |     NULL |
++-----------+--------------+-------+-----------+-----------+----------+
+22 rows in set (0.05 sec)
+
+mysql>
+
+=====TRUNCATE
+mysql> use accounts;
+Database changed
+
+mysql> SELECT * FROM accounts_table;
++----------+----------+
+| username | password |
++----------+----------+
+| huy      | 123      |
+| songoku  | 1234     |
+| toan     | abc      |
+| tu       | 2        |
++----------+----------+
+4 rows in set (0.02 sec)
+
+mysql> TRUNCATE TABLE accounts_table;
+Query OK, 0 rows affected (0.36 sec)
+
+mysql> SELECT * FROM accounts_table;
+Empty set (0.00 sec)
+
+mysql> DROP TABLE accounts_table;
+Query OK, 0 rows affected (0.25 sec)
+
+mysql> show tables;
+Empty set (0.00 sec)
+
+mysql>
+
+===
+DUMP and RESTORE DATABASE, TABLES
+VD sau thì database là demo, có bảng là country, pupil
+
+Microsoft Windows [Version 6.3.9600]
+(c) 2013 Microsoft Corporation. All rights reserved.
+
+//dump 2 table country và pupil:
+C:\Users\AnhTu>mysqldump -u root -p demo country > D:\country.sql
+Enter password: ****
+
+C:\Users\AnhTu>mysqldump -u root -p demo pupil > D:\pupil.sql
+Enter password: ****
+
+//dump a databases:
+C:\Users\AnhTu>mysqldump -u root -p demo > D:\demo.sql
+Enter password: ****
+
+
+C:\Users\AnhTu>mysql -u root -p
+Enter password: ****
+
+mysql> USE demo;
+Database changed
+
+mysql> show tables;
++----------------+
+| Tables_in_demo |
++----------------+
+| country        |
+| pupil          |
++----------------+
+2 rows in set (0.00 sec)
+
+//erase database 'demo'
+mysql> DROP DATABASE demo;
+Query OK, 2 rows affected (0.45 sec)
+
+mysql> USE demo;
+ERROR 1049 (42000): Unknown database 'demo'
+
+//restore DB 'demo'
+//phải create DB demo trước
+mysql> CREATE DATABASE demo;
+Query OK, 1 row affected (0.00 sec)
+
+//bây giờ restore
+mysql> USE demo;
+Database changed
+
+mysql> SOURCE D:\demo.sql
+
+Query OK, 0 rows affected (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+Query OK, 0 rows affected (0.01 sec)
+
+Query OK, 0 rows affected (0.01 sec)
+
+Query OK, 0 rows affected (0.01 sec)
+
+Query OK, 0 rows affected (0.01 sec)
+
+Query OK, 0 rows affected (0.01 sec)
+
+Query OK, 0 rows affected, 1 warning (0.01 sec)
+
+Query OK, 0 rows affected (0.03 sec)
+
+Query OK, 0 rows affected (0.03 sec)
+
+Query OK, 0 rows affected (0.03 sec)
+
+Query OK, 0 rows affected (0.03 sec)
+
+Query OK, 0 rows affected (0.31 sec)
+
+Query OK, 0 rows affected (0.31 sec)
+
+Query OK, 0 rows affected (0.34 sec)
+
+Query OK, 0 rows affected (0.34 sec)
+
+Query OK, 5 rows affected (0.39 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+Query OK, 0 rows affected (0.41 sec)
+
+Query OK, 0 rows affected (0.45 sec)
+
+Query OK, 0 rows affected (0.47 sec)
+
+Query OK, 0 rows affected (0.47 sec)
+
+Query OK, 0 rows affected (0.47 sec)
+
+Query OK, 0 rows affected (0.73 sec)
+
+Query OK, 0 rows affected (0.73 sec)
+
+Query OK, 0 rows affected (0.75 sec)
+
+Query OK, 0 rows affected (0.75 sec)
+
+Query OK, 4 rows affected (0.77 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+Query OK, 0 rows affected (0.77 sec)
+
+Query OK, 0 rows affected (0.78 sec)
+
+Query OK, 0 rows affected (0.78 sec)
+
+Query OK, 0 rows affected, 2 warnings (0.78 sec)
+
+Query OK, 0 rows affected (0.78 sec)
+
+Query OK, 0 rows affected (0.78 sec)
+
+Query OK, 0 rows affected (0.78 sec)
+
+Query OK, 0 rows affected (0.80 sec)
+
+Query OK, 0 rows affected (0.80 sec)
+
+Query OK, 0 rows affected (0.80 sec)
+
+//restore success! now we should exit mysql first, if not, it doesn't work like these:
+
+
+C:\Users\AnhTu>mysql -u root -p
+Enter password: ****
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| accounts           |
+| banhang            |
+| chat_db            |
+| dbo                |
+| demo               |
+| dormitory          |
+| mysql              |
+| people             |
+| performance_schema |
+| qlbanhang          |
+| quan_ly_sv_ktx     |
+| quanlydiemsinhvien |
+| quanlysv_ktx(tung) |
+| sakila             |
+| student_2          |
+| studentdb          |
+| sys                |
+| world              |
++--------------------+
+19 rows in set (0.00 sec)
+
+mysql> use demo;
+Database changed
+mysql> SELECT * FROM country;
++----+-------------+------------+
+| id | countryName | capital    |
++----+-------------+------------+
+|  1 | Vietnam     | Hanoi      |
+|  2 | Japan       | Tokyo      |
+|  3 | USA         | Washington |
+|  4 | Singapore   | Singapore  |
+|  5 | England     | London     |
++----+-------------+------------+
+5 rows in set (0.00 sec)
+
+//erase a table
+mysql> DROP TABLE country;
+Query OK, 0 rows affected (0.17 sec)
+
+mysql> show tables;
++----------------+
+| Tables_in_demo |
++----------------+
+| pupil          |
++----------------+
+1 row in set (0.00 sec)
+
+mysql> exit
+Bye
+
+//now backup a table
+C:\Users\AnhTu>mysql -u root -p demo < D:\country.sql
+Enter password: ****
+mysql: Unknown OS character set 'cp1258'.
+mysql: Switching to the default character set 'latin1'.
+
+C:\Users\AnhTu>mysql -u root -p
+Enter password: ****
+
+mysql> use demo;
+Database changed
+mysql> show tables;
++----------------+
+| Tables_in_demo |
++----------------+
+| country        |
+| pupil          |
++----------------+
+2 rows in set (0.00 sec)
+
+mysql> mysql -u root -p demo < D:\country.sql;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'ountry.sql' at line 1
+//can't backup a table if you haven't exit mysql yet!
+mysql>

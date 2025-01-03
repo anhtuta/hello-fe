@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Slide demo</title>
+	<!-- <link rel="stylesheet" type="text/css" href="lib/bootstrap.css"> -->
+	<link rel="stylesheet" type="text/css" href="lib/font-awesome-4.7.0/css/font-awesome.css">
+	<link rel="stylesheet" type="text/css" href="bai86.css">
+</head>
+<body>
+	<div id="slides_wrapper">
+		<div class="slides">
+			<!-- Dùng background-image để có thể hiển thị ảnh full màn hình,
+			kể cả khi resize. Trong khi đó thẻ <img src=""> KHÔNG LÀM ĐC! -->
+			<div class="each_slide_wrapper slide_appearing1">
+				<div class="each_slide" style="background-image:url('images/slide1.jpg')">
+
+				</div>
+			</div>
+			<div class="each_slide_wrapper">
+				<div class="each_slide" style="background-image:url('images/slide2.jpg')">
+
+				</div>
+			</div>
+			<div class="each_slide_wrapper">
+				<div class="each_slide" style="background-image:url('images/slide3.jpg')">
+
+				</div>
+			</div>
+			<div class="each_slide_wrapper">
+				<div class="each_slide" style="background-image:url('images/slide4.jpg')">
+
+				</div>
+			</div>
+			<div class="each_slide_wrapper">
+				<div class="each_slide" style="background-image:url('images/slide5.jpg')">
+
+				</div>
+			</div>
+		</div>
+
+		<div class="btn_switch">
+			<b class="previous" onclick="btnPrevEvent()"><span class="fa fa-angle-left"></span></b>
+			<b class="next" onclick="btnNextEvent()"><span class="fa fa-angle-right"></span></b>
+		</div>
+
+		<div class="anim_type">
+			<select id="select_anim_type" onchange="selectAnimType(this)">
+				<option value="1">Type 1</option>
+				<option value="2">Type 2</option>
+				<option value="3">Type 3</option>
+				<option value="4">Type 4</option>
+				<option value="5">Type 5</option>
+				<option value="6">Type 6</option>
+				<option value="7">Type 7</option>
+			</select>
+		</div>
+	</div>
+
+	<div class="text_wrapper">
+		<h2>Đã xem xong video 114. Phần slide này còn video 115, 116 chưa xem (Nản lắm rồi, mấy cái hiệu ứng slide với vẩn!!!)</h2>
+		<h3>Loạt bài thực hành này khá nhiều chỗ thừa và tác giả code khá ngớ ngẩn! Code như tao sẽ ngắn gọn hơn, hehe...</h3>
+	</div>
+	<script type="text/javascript" src="bai86.js"></script>
+</body>
+</html>

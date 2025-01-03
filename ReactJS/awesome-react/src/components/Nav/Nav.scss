@@ -1,0 +1,99 @@
+@import '../../scss/style-variables.scss';
+
+.custom-navbar {
+  position: relative;
+
+  .nav-wrapper {
+    font-weight: bold;
+    list-style: none;
+    margin: 0;
+    padding-left: 0;
+    background: $primary-color;
+    padding: 0 $body-padding-lr;
+
+    ul {
+      list-style: none;
+    }
+
+    .menu-item {
+      padding: 0;
+      text-align: left;
+      background: $primary-color;
+      transition: 0.3s;
+      a {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: #2199f9;
+        text-decoration: none;
+        padding: 9px;
+      }
+      &:hover {
+        background: #fff; // $primary-color-1;
+        & > a {
+          color: #2199f9; //$secondary-color1;
+        }
+      }
+    }
+
+    .active-menu {
+      background: $primary-color-2;
+    }
+
+    .menu-parent {
+      cursor: pointer;
+      position: relative;
+      & > .sub-menu {
+        display: none;
+        box-shadow: 0 3px 3px rgba(0, 0, 0, 0.2);
+        position: absolute;
+        z-index: 9999;
+        background: #333333; // $primary-color;
+        text-transform: none;
+        margin: 0;
+        padding-left: 0;
+        // Từ thằng con level3 trở đi, phải ở bên phải cha nó (còn level2 xem style ở dưới)
+        left: 100%;
+        top: 0;
+        // width: 123px;
+      }
+      &:hover > .sub-menu {
+        display: block;
+        min-width: 112px;
+      }
+    }
+
+    .level1 {
+      display: inline-block;
+      // Riêng thằng con level2 thì phải ở dưới cha nó (level1)
+      & > .sub-menu {
+        left: 0;
+        top: 100%;
+        width: 123px;
+      }
+    }
+
+    .caret {
+      margin-left: 2px;
+    }
+  }
+  .userinfo-wrapper {
+    position: absolute;
+    right: 9px;
+    top: 8px;
+    color: #fff;
+    .logout-link {
+      cursor: pointer;
+      color: #2199f9;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+    a {
+      color: #2199f9;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}
