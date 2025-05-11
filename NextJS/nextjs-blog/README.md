@@ -6,6 +6,8 @@ Command to create this project:
 npx create-next-app@latest nextjs-blog --use-npm --example "https://github.com/vercel/next-learn/tree/main/basics/learn-starter"
 ```
 
+Node version: `v22.15.0`
+
 # Pages Router
 
 Ref: https://nextjs.org/learn/pages-router
@@ -217,4 +219,39 @@ export default function handler(req, res) {
 }
 ```
 
+Như vậy, cần Node.js server để phục vụ
+
+- Server-side rendered pages
+- API Routes
+
+Còn static pages thì không cần
+
 https://nextjs.org/learn/pages-router/api-routes-api-routes-details
+
+## Next.js and Vercel
+
+When you deploy your Next.js app to Vercel, the following happens by default:
+
+- Pages that use **Static Generation and assets** (JS, CSS, images, fonts, etc) will automatically be served from the **Vercel CDN**, which is blazingly fast.
+- Pages that use **Server-Side Rendering and API routes** will automatically become isolated **Serverless Functions** (e.g. Lambdas). This allows page rendering and API requests to scale infinitely.
+
+Vercel has many more features:
+
+- Custom Domains
+- Environment Variables
+- Automatic HTTPS
+
+DPS workflow: Develop, Preview, and Ship.
+
+- Develop: write code in Next.js and used the Next.js development server running to take advantage of its hot reloading feature.
+- Preview: push changes to a branch on GitHub, and Vercel created a preview deployment that’s available via a URL. We can share this preview URL with others for feedback. In addition to doing code reviews, you can do deployment previews.
+- Ship: merge the pull request to main to ship to production
+
+https://nextjs.org/learn/pages-router/deploying-nextjs-app-platform-details
+
+## Other Hosting Options
+
+Next.js can be deployed to any hosting provider that supports Node.js.
+
+- Run the `build` script once, which builds the production application in the `.next` folder: `npm run build`
+- After building, the `start` script starts a Node.js server that supports hybrid pages, serving both statically generated and server-side rendered pages, and API Routes: `npm run start`
