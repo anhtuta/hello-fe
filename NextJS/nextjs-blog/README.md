@@ -255,3 +255,10 @@ Next.js can be deployed to any hosting provider that supports Node.js.
 
 - Run the `build` script once, which builds the production application in the `.next` folder: `npm run build`
 - After building, the `start` script starts a Node.js server that supports hybrid pages, serving both statically generated and server-side rendered pages, and API Routes: `npm run start`
+
+## Build static HTML pages
+
+- Add nextjs config file: `next.config.js`
+- Currently must disable Image Optimization
+- Build: `npm run build`
+- The output (static HTML pages) will be generated at `out` folder. Can deploy it to a hosting server, or start static server at local using php (run in `out` folder): `php -S localhost:8888`
