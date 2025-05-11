@@ -198,3 +198,23 @@ This approach works well for user **dashboard pages**, for example. **Because a 
 The team behind Next.js has created a React hook for data fetching called [SWR](https://swr.vercel.app/). We highly recommend it if you’re fetching data on the client side. It handles caching, revalidation, focus tracking, refetching on interval, and more
 
 https://nextjs.org/learn/pages-router/data-fetching-request-time
+
+## API Routes Details
+
+Do Not Fetch an API Route from `getStaticProps` or `getStaticPaths`
+
+- Instead, write your server-side code directly in `getStaticProps` or `getStaticPaths` (or call a helper function).
+- Reason: `getStaticProps` and `getStaticPaths` **run only on the server-side** and will never run on the client-side. Moreover, these functions will **not be included in the JS bundle for the browser**. That means you can write code such as direct database queries without sending them to browsers.
+
+Example: http://localhost:3000/api/hello
+
+A good use case for API Routes is **handling form input**. For example, you can create a form on your page and have it send a POST request to your API Route
+
+```js
+export default function handler(req, res) {
+  const email = req.body.email;
+  // Then save email to your database, etc...
+}
+```
+
+https://nextjs.org/learn/pages-router/api-routes-api-routes-details
