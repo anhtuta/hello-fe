@@ -262,3 +262,65 @@ Next.js can be deployed to any hosting provider that supports Node.js.
 - Currently must disable Image Optimization
 - Build: `npm run build`
 - The output (static HTML pages) will be generated at `out` folder. Can deploy it to a hosting server, or start static server at local using php (run in `out` folder): `php -S localhost:8888`
+
+# NextJS fundamentals
+
+## Rendering
+
+| Method    | File Example         | Data Fetching Function             | When to Use                                     |
+| --------- | -------------------- | ---------------------------------- | ----------------------------------------------- |
+| SSG       | `pages/[slug].js`    | `getStaticPaths`, `getStaticProps` | Known routes at build time                      |
+| SSR       | `pages/[slug].js`    | `getServerSideProps`               | Data changes per request                        |
+| CSR       | `pages/[slug].js`    | React hooks (`useEffect`)          | Data fetched on client                          |
+| ISR       | `pages/[slug].js`    | `getStaticProps` + `revalidate`    | Static pages, but need updates after deployment |
+| Catch-All | `pages/[...slug].js` | Any of the above                   | Flexible, nested dynamic routes                 |
+
+Ref: Copilot
+
+## NextJS SSG
+
+There are two main ways to generate static pages:
+
+### 1. Static Generation with `getStaticProps` (for **static routes**)
+
+- How:
+  - Create a page file (e.g. `about.js`).
+  - Export an async `getStaticProps` function to fetch data at build time.
+- Result:
+  - The page is generated as static HTML at build time.
+- Example:
+  ```js
+  export async function getStaticProps() {
+    return { props: { message: "Hello SSG!" } };
+  }
+  ```
+
+### 2. Static Generation with `getStaticPaths` + `getStaticProps` (for **dynamic routes**)
+
+- How:
+  - Create a dynamic route file (e.g. `pages/blog/[slug].js`).
+  - Export `getStaticPaths` to specify all possible paths at build time.
+  - Export `getStaticProps` to fetch data for each path.
+- Result:
+  - All specified dynamic pages are generated as static HTML at build time.
+- Example:
+  ```js
+  export async function getStaticPaths() {
+    return { paths: [{ params: { slug: "hello" } }], fallback: false };
+  }
+  export async function getStaticProps({ params }) {
+    return { props: { slug: params.slug } };
+  }
+  ```
+
+Note:
+
+- You can also have plain static files (no data fetching) in the pages directory, which are always statically generated.
+- ISR (`revalidate` in `getStaticProps`) is an extension of SSG, allowing static pages to be regenerated after deployment.
+
+Compare with Gatsby SSG:
+
+- Next.js does not have a direct equivalent to Gatsby’s `gatsby-node.js` for programmatically creating pages. Instead, Next.js uses the file system-based routing
+- Both of them can use dynamic files in `pages` folder, to generate dynamic pages
+
+Ref: Copilot
